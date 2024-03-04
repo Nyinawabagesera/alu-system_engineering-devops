@@ -1,32 +1,22 @@
 #!/usr/bin/env bash
-# Configures a new Ubuntu machine by installing Nginx
-# Nginx should be listening on port 80
-# When queried at its root / with a GET request, it must return a page that contains the string Holberton School
+# a Bash script that configures a new Ubuntu machine to respect
+# above requirements (this script will be run on the server itself)
+# bash script to install nginx web server
+#   - Nginx should be listening on port 80
+#   - Return page containing "Holberton School" when queried
 
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-sudo apt-get install nginx -y
+apt-get update
+apt-get install -y nginx
 
-echo -e "\nSetting up some minor stuff.\n"
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Holberton School" > /etc/nginx/html/index.html
+printf %s "server {
+     listen      80 default_server;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+}
+" > /etc/nginx/sites-available/default
 
-# Starting nginx service
-sudo service nginx start
-
-# Allowing nginx on the firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership of website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
-
-# Backup default index
-sudo mv /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-
-# Creating new index
-echo -e "<html>\n<head><title>Holberton School</title></head>\n<body>\nHolberton School for the win!\n</body>\n</html>" | sudo tee /var/www/html/index.nginx-debian.html
-
-# Restarting nginx
-sudo service nginx restart
-
-echo -e "\nCompleted. ✅\n"
-
+service nginx restart
