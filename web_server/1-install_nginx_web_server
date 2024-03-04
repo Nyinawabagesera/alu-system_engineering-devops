@@ -1,18 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Configures a new Ubuntu machine by installing Nginx
+# Nginx should be listening on port 80
+# When queried at its root / with a GET request, it must return a page that contains the string Holberton School
 
 echo -e "Updating and installing Nginx.\n"
 sudo apt-get update -y -qq && \
-         sudo apt-get install nginx -y
+sudo apt-get install nginx -y
 
 echo -e "\nSetting up some minor stuff.\n"
 
 # Starting nginx service
 sudo service nginx start
 
-# Allowing nginx on firewall
+# Allowing nginx on the firewall
 sudo ufw allow 'Nginx HTTP'
 
-# Give the user ownership to website files for easy editing
+# Give the user ownership of website files for easy editing
 sudo chown -R "$USER":"$USER" /var/www/html
 sudo chmod -R 755 /var/www
 
@@ -20,10 +23,10 @@ sudo chmod -R 755 /var/www
 sudo mv /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
 # Creating new index
-echo -e "<html>\n<head><title>Holberton School</title></head>\n<body>\nHolberton School\n</body>\n</html>" | sudo tee /var/www/html/index.nginx-debian.html
+echo -e "<html>\n<head><title>Holberton School</title></head>\n<body>\nHolberton School for the win!\n</body>\n</html>" | sudo tee /var/www/html/index.nginx-debian.html
 
 # Restarting nginx
 sudo service nginx restart
 
-echo -e "\nCompleted. ✅ \n"
+echo -e "\nCompleted. ✅\n"
 
